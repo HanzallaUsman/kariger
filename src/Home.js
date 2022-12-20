@@ -1,13 +1,21 @@
-import React from "react";
-import styled from "styled-components";
+import FeatureProduct from "./components/FeatureProduct";
+import HeroSection from "./components/HeroSection";
+import Services from "./components/Services";
+import Trusted from "./components/Trusted";
 
 const Home = () => {
-  return <Wrapper className="test">Home</Wrapper>;
-};
+  const data = {
+    name: "Kariger",
+  };
 
-const Wrapper = styled.section`
-  height: 100vh;
-  background-color: ${({ theme }) => theme.colors.bg};
-`;
+  return (
+    <>
+      <HeroSection myData={data} />
+      <FeatureProduct />
+      <Services />
+      <Trusted />
+    </>
+  );
+};
 
 export default Home;

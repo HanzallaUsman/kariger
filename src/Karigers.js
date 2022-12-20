@@ -4,7 +4,7 @@ import ProductList from "./components/ProductList";
 import Sort from "./components/Sort";
 import { useFilterContext } from "./context/filter_context";
 
-const Products = () => {
+const Karigers = () => {
   return (
     <Wrapper>
       <div className="container grid grid-filter-column">
@@ -14,8 +14,7 @@ const Products = () => {
 
         <section className="product-view--sort">
           <div className="sort-filter">
-            <Sort pageType={"gigs"} />
-            {/* console.log("Gigs"); */}
+            <Sort pageType={"karigers"} />
           </div>
           <div className="main-product">
             <ProductList />
@@ -38,4 +37,4 @@ const Wrapper = styled.section`
   }
 `;
 
-export default Products;
+export default Karigers;
