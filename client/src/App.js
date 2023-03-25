@@ -12,6 +12,8 @@ import { ThemeProvider } from "styled-components";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Karigers from "./Karigers";
+import SignupForm from "./SignupForm";
+import LoginForm from "./LoginForm";
 
 const App = () => {
   const theme = {
@@ -46,6 +48,8 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
           <Route path="/karigers" element={<Karigers />} />
