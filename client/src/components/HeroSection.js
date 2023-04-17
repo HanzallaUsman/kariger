@@ -10,8 +10,28 @@ const HeroSection = ({ myData }) => {
   useEffect(() => {
     fetch("http://localhost:8000/message")
       .then((res) => res.json())
-      .then((data) => setMessage(data.message));
+      .then((data) => {
+        setMessage(data.message);
+        console.log("Message is:", data);
+      });
   }, []);
+
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/newListing", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       title: "Kariger",
+  //       description: "This is an example job listing",
+  //       price: 50000,
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => console.log("data: ", data))
+  //     .catch((error) => console.error(error));
+  // }, []);
 
   return (
     <Wrapper>
@@ -26,8 +46,15 @@ const HeroSection = ({ myData }) => {
               atque temporibus veniam doloribus libero ad error omnis voluptates
               animi! Suscipit sapiente.
             </p>
-            <NavLink>
-              <Button>Browse Karigers</Button>
+            <NavLink to="/karigers">
+              <Button style={{ display: "block", margin: "1rem" }}>
+                Browse Karigers
+              </Button>
+            </NavLink>
+            <NavLink to="/addlisting">
+              <Button style={{ display: "block", margin: "1rem" }}>
+                Post a Job
+              </Button>
             </NavLink>
           </div>
           {/* our homepage image  */}

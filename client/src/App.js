@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 import Karigers from "./Karigers";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
+import AddListingForm from "./AddListingForm";
 
 const App = () => {
   const theme = {
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
           <Route path="/karigers" element={<Karigers />} />
+          <Route path="/addlisting" element={<AddListingForm />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/singleproduct/:id" element={<SingleProduct />} />
           <Route path="/cart" element={<Cart />} />

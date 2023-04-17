@@ -1,15 +1,23 @@
 const express = require("express");
-const cors = require("cors");
-
-const app = express();
-
-app.use(cors());
+require("dotenv").config();
+const mongoose = require("mongoose");
+const app = require("./app");
 app.use(express.json());
 
-app.get("/message", (req, res) => {
-  res.json({ message: "By Hanzalla Usman" });
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-app.listen(8000, () => {
-  console.log(`Server is running on port 8000.`);
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Connected to MongoDB database!");
+
+  app.listen(8000, () => {
+    console.log("Server is listening on port 8000");
+  });
 });
