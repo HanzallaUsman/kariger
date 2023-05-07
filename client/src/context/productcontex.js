@@ -4,6 +4,7 @@ import reducer from "../reducer/productReducer";
 
 const AppContext = createContext();
 
+// Make new api endpoint and pull from that endpoint
 const API = "https://api.pujakaitem.com/api/products";
 
 const initialState = {

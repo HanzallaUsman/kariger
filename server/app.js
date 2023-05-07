@@ -21,4 +21,7 @@ app.get("/message", (req, res) => {
 const jobListingsRouter = require("./routes/newListing");
 app.use("/newListing", jobListingsRouter);
 
+// const listingsApiRouter = require("./routes/Listings");
+// app.use("/Listings", listingsApiRouter);
+
 module.exports = app;

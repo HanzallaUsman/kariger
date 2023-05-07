@@ -1,91 +1,172 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import Card from "@mui/material/Card";
+import { TextField, Box, Select, MenuItem, Typography } from "@mui/material";
+import { Button } from "./styles/Button";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "./firebase";
+import axios from "axios";
 
-const FormContainer = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Label = styled.label`
-  margin: 10px;
-`;
-
-const Input = styled.input`
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 0 0 3px gray;
-  width: 300px;
-`;
-
-const TextArea = styled.textarea`
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 0 0 3px gray;
-  width: 300px;
-`;
-
-const Button = styled.button`
-  margin: 10px;
-  padding: 5px 10px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 0 3px gray;
-  cursor: pointer;
-`;
+const categories = [
+  "Construction Workers",
+  "Landscapers",
+  "Moving Services",
+  "House Cleaning",
+  "General Laborers",
+];
 
 const AddListingForm = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [budget, setBudget] = useState("");
+  const [budgetUnit, setBudgetUnit] = useState("perHour");
+  const [category, setCategory] = useState("");
+  const [file, setFile] = useState(null);
 
-  const handleSubmit = (event) => {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
+  };
+
+  const uploadFile = async (file, filePath) => {
+    const storageRef = ref(storage, filePath);
+    try {
+      console.log("Uploading file to firebase storage");
+      await uploadBytes(storageRef, file);
+      console.info("Uploaded file");
+      const url = await getDownloadURL(storageRef);
+      console.info("Obtained url for uploaded file", url);
+      return { url };
+    } catch (e) {
+      console.error(e, "Could not upload file");
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit({ title, description });
-    setTitle("");
-    setDescription("");
+    try {
+      // Upload the image to Firebase Storage and get its download URL
+      const imageName = Date.now().toString() + "_Image";
+      const url = await uploadFile(file, `listings/${imageName}`);
+
+      const response = await axios.post("http://localhost:8000/newListing", {
+        title,
+        description,
+        price: budget,
+        category,
+        imageUrl: url,
+      });
+      console.log(response.data);
+      setTitle("");
+      setDescription("");
+      setBudget("");
+      setCategory("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
-      <Label htmlFor="title">Title</Label>
-      <Input
-        type="text"
-        id="title"
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-      />
-      <Label htmlFor="description">Description</Label>
-      <TextArea
-        id="description"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <Label htmlFor="budget">Budget</Label>
-      <TextArea
-        id="budget"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <Label htmlFor="description">Description</Label>
-      <TextArea
-        id="description"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <Label htmlFor="description">Description</Label>
-      <TextArea
-        id="description"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <Button type="submit">Add Listing</Button>
-    </FormContainer>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
+      }}
+    >
+      <Card sx={{ maxWidth: 400, width: "100%", padding: "5%" }}>
+        <form onSubmit={handleSubmit}>
+          <Box sx={{ display: "flex", flexDirection: "column", margin: "5%" }}>
+            <Typography fontSize="large">Post a Gig!</Typography>
+            <TextField
+              label="Title"
+              type="text"
+              id="title"
+              value={title}
+              margin="normal"
+              onChange={(event) => setTitle(event.target.value)}
+              InputProps={{ style: { fontSize: 12 } }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            />
+            <TextField
+              label="Description"
+              id="description"
+              value={description}
+              margin="normal"
+              onChange={(event) => setDescription(event.target.value)}
+              InputProps={{ style: { fontSize: 12 } }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            />
+            {/* <TextField
+              label="Budget"
+              type="number"
+              id="budget"
+              value={budget}
+              margin="normal"
+              onChange={(event) => setBudget(event.target.value)}
+              InputProps={{ style: { fontSize: 12 } }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            /> */}
+            <TextField
+              label="Budget"
+              type="number"
+              id="budget"
+              value={budget}
+              margin="normal"
+              onChange={(event) => setBudget(event.target.value)}
+              InputProps={{ style: { fontSize: 12 } }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            />
+            <TextField
+              label="Budget Unit"
+              id="budgetUnit"
+              select
+              value={budgetUnit}
+              onChange={(event) => setBudgetUnit(event.target.value)}
+              margin="normal"
+              InputProps={{ style: { fontSize: 12 } }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            >
+              <MenuItem value="perHour">per hour</MenuItem>
+              <MenuItem value="perDay">per day</MenuItem>
+            </TextField>
+            <Select
+              label="Category"
+              id="category"
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              margin="normal"
+              sx={{ marginTop: "20px", marginBottom: "20px" }}
+              InputProps={{ style: { fontSize: 12 } }}
+              inputProps={{ style: { fontSize: 12 } }}
+            >
+              <MenuItem value="">Select a category</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handleFileChange}
+            />
+
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{
+                fontSize: "medium",
+                marginTop: "20px",
+              }}
+            >
+              Add Gig
+            </Button>
+          </Box>
+        </form>
+      </Card>
+    </Box>
   );
 };
 

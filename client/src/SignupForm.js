@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "./styles/Button";
+import { NavLink } from "react-router-dom";
 
 const PaperContainer = styled.div`
   display: flex;
@@ -77,6 +78,12 @@ const LoginForm = () => {
             onChange={(e) => setConfirmpassword(e.target.value)}
           />
           <Button type="submit">Sign up</Button>
+          <div style={{ display: "flex" }}>
+            <p>Already have a Kariger Account? </p>
+            <NavLink to="/login">
+              <p style={{ color: "blue" }}> Login</p>
+            </NavLink>
+          </div>
         </FormContainer>
       </PaperContainer>
     </Wrapper>

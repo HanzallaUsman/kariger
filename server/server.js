@@ -16,7 +16,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   console.log("Connected to MongoDB database!");
-
+  app.locals.db = db;
   app.listen(8000, () => {
     console.log("Server is listening on port 8000");
   });
