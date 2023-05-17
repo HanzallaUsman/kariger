@@ -15,6 +15,7 @@ import Karigers from "./Karigers";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
 import AddListingForm from "./AddListingForm";
+import SearchPage from "./components/SearchPage";
 
 const App = () => {
   const theme = {
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/about" element={<About />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/products" element={<Products />} />
           <Route path="/karigers" element={<Karigers />} />
           <Route path="/addlisting" element={<AddListingForm />} />

@@ -21,6 +21,8 @@ const AddListingForm = ({ onSubmit }) => {
   const [budgetUnit, setBudgetUnit] = useState("perHour");
   const [category, setCategory] = useState("");
   const [file, setFile] = useState(null);
+  const [type, setType] = useState("");
+  const [company, setCompany] = useState(""); // new state for company field
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -48,18 +50,23 @@ const AddListingForm = ({ onSubmit }) => {
       const imageName = Date.now().toString() + "_Image";
       const url = await uploadFile(file, `listings/${imageName}`);
 
-      const response = await axios.post("http://localhost:8000/newListing", {
+      const response = await axios.post("http://localhost:8000/listings/new", {
         title,
+        name: title,
         description,
         price: budget,
         category,
+        type,
         imageUrl: url,
+        featured: false,
+        company: type === "worker" ? company : "Gig", // include company based on type
       });
       console.log(response.data);
       setTitle("");
       setDescription("");
       setBudget("");
       setCategory("");
+      setCompany("");
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +104,7 @@ const AddListingForm = ({ onSubmit }) => {
               InputProps={{ style: { fontSize: 12 } }}
               InputLabelProps={{ style: { fontSize: 12 } }}
             />
+
             {/* <TextField
               label="Budget"
               type="number"
@@ -130,6 +138,7 @@ const AddListingForm = ({ onSubmit }) => {
               <MenuItem value="perHour">per hour</MenuItem>
               <MenuItem value="perDay">per day</MenuItem>
             </TextField>
+            <Typography>Category</Typography>
             <Select
               label="Category"
               id="category"
@@ -147,6 +156,37 @@ const AddListingForm = ({ onSubmit }) => {
                 </MenuItem>
               ))}
             </Select>
+            <Typography>Type</Typography>
+            <Select
+              label="Type"
+              id="type"
+              value={type}
+              onChange={(event) => setType(event.target.value)}
+              margin="normal"
+              sx={{ marginTop: "20px", marginBottom: "20px" }}
+              InputProps={{ style: { fontSize: 12 } }}
+              inputProps={{ style: { fontSize: 12 } }}
+            >
+              <MenuItem value="">Select a type</MenuItem>
+              <MenuItem value="gig">Gig</MenuItem>
+              <MenuItem value="worker">Worker</MenuItem>
+            </Select>
+
+            {type === "worker" && (
+              <>
+                <Typography>Company</Typography>
+                <TextField
+                  label="Company"
+                  id="company"
+                  value={company}
+                  margin="normal"
+                  onChange={(event) => setCompany(event.target.value)}
+                  InputProps={{ style: { fontSize: 12 } }}
+                  InputLabelProps={{ style: { fontSize: 12 } }}
+                />
+              </>
+            )}
+
             <input
               type="file"
               accept="image/png, image/jpeg"

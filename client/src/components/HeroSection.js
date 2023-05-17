@@ -5,15 +5,24 @@ import { useState, useEffect } from "react";
 
 const HeroSection = ({ myData }) => {
   const { name } = myData;
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/message")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setMessage(data.message);
+  //       console.log("Message is:", data);
+  //     });
+  // }, []);
   useEffect(() => {
-    fetch("http://localhost:8000/message")
-      .then((res) => res.json())
-      .then((data) => {
-        setMessage(data.message);
-        console.log("Message is:", data);
-      });
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setCurrentUser(user);
+      console.log("User is:", user);
+    }
   }, []);
 
   return (
@@ -23,11 +32,13 @@ const HeroSection = ({ myData }) => {
           <div className="hero-section-data">
             <p className="intro-data">Welcome to </p>
             <h1> {name} </h1>
-            <h3> {message} </h3>
+            {/* <h3> {message} </h3> */}
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
-              atque temporibus veniam doloribus libero ad error omnis voluptates
-              animi! Suscipit sapiente.
+              Karigar connects you with top-notch skilled professionals for all
+              your project needs. From carpentry and plumbing to electrical work
+              and landscaping, we've got the expertise you seek. With our
+              platform, finding quality workmanship is a breeze. Join Karigar
+              today and experience excellence at your fingertips.
             </p>
             <NavLink to="/karigers">
               <Button style={{ display: "block", margin: "1rem" }}>

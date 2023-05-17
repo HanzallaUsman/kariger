@@ -102,6 +102,10 @@ const filterReducer = (state, action) => {
       const { text, category, company, color, price } = state.filters;
 
       if (text) {
+        console.log("text:", text);
+        // if (curElem) {
+        //   console.log(curElem);
+        // }
         tempFilterProduct = tempFilterProduct.filter((curElem) => {
           return curElem.name.toLowerCase().includes(text);
         });
@@ -115,15 +119,15 @@ const filterReducer = (state, action) => {
 
       if (company !== "all") {
         tempFilterProduct = tempFilterProduct.filter(
-          (curElem) => curElem.company.toLowerCase() === company.toLowerCase()
+          (curElem) => curElem.company?.toLowerCase() === company.toLowerCase()
         );
       }
 
-      if (color !== "all") {
-        tempFilterProduct = tempFilterProduct.filter((curElem) =>
-          curElem.colors.includes(color)
-        );
-      }
+      // if (color !== "all") {
+      //   tempFilterProduct = tempFilterProduct.filter((curElem) =>
+      //     curElem.colors.includes(color)
+      //   );
+      // }
 
       if (price === 0) {
         tempFilterProduct = tempFilterProduct.filter(

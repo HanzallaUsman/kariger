@@ -10,6 +10,10 @@ app.use(morgan("dev"));
 app.use(express.json()); // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })); // decode url-encoded incoming POST data
 
+// const sessions = {};
+
+const { sessions } = require("./sessions");
+
 app.get("/", (req, res) => {
   res.json({ message: "Root: Hello, world!" });
 });
@@ -18,10 +22,16 @@ app.get("/message", (req, res) => {
   res.json({ message: "By Hanzalla Usman" });
 });
 
-const jobListingsRouter = require("./routes/newListing");
-app.use("/newListing", jobListingsRouter);
+const sessionRouter = require("./routes/login");
+app.use("/login", sessionRouter);
+
+// const loginRouter = require("./routes/login");
+// app.use("/login", loginRouter);
+
+const listingsRouter = require("./routes/listings");
+app.use("/listings", listingsRouter);
 
 // const listingsApiRouter = require("./routes/Listings");
 // app.use("/Listings", listingsApiRouter);
 
-module.exports = app;
+module.exports = { sessions, app };

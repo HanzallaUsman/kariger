@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { FiShoppingCart } from "react-icons/fi";
+// import { FiShoppingCart } from "react-icons/fi";
+import { BsSearch } from "react-icons/bs";
 import { CgMenu, CgClose } from "react-icons/cg";
 import { Button } from "../styles/Button";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const [menuIcon, setMenuIcon] = useState();
+  const [loggedIn, setLoggedIn] = useState(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    return storedUser ? true : false;
+  });
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setLoggedIn(true);
+    }
+  }, []);
+
+  const nav = useNavigate();
+
+  const handleLogout = () => {
+    // Perform logout logic here
+    localStorage.removeItem("currentUser");
+    setLoggedIn(false);
+    nav("/login");
+  };
 
   const Nav = styled.nav`
     .navbar-lists {
@@ -213,19 +234,28 @@ const Nav = () => {
           </li>
           <li>
             <Button>
-              <NavLink
-                to="/login"
-                className="navbar-link "
-                onClick={() => setMenuIcon(false)}
-              >
-                Login
-              </NavLink>
+              {loggedIn ? (
+                <button onClick={handleLogout}>Logout</button>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className="navbar-link "
+                  onClick={() => setMenuIcon(false)}
+                >
+                  Login
+                </NavLink>
+              )}
             </Button>
           </li>
-          <li>
+          {/* <li>
             <NavLink to="/cart" className="navbar-link cart-trolley--link">
               <FiShoppingCart className="cart-trolley" />
               <span className="cart-total--item"> 0 </span>
+            </NavLink>
+          </li> */}
+          <li>
+            <NavLink to="/search" className="navbar-link ">
+              <BsSearch className="cart-trolley" />
             </NavLink>
           </li>
         </ul>

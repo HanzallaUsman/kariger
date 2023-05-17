@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "./styles/Button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PaperContainer = styled.div`
   display: flex;
@@ -37,13 +38,29 @@ const Wrapper = styled.div`
 `;
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      const response = await axios.post("http://localhost:8000/login", {
+        username,
+        password,
+      });
+      console.log("Response: ", response);
+      const sessionID = response.data.sessionID;
+      console.log("Session ID: ", sessionID);
+      localStorage.setItem("currentUser", JSON.stringify({ username }));
+      console.log(
+        "localStorage.getItem('currentUser')",
+        localStorage.getItem("currentUser")
+      );
+      nav("/");
+    } catch (error) {
+      console.log("Error logging in: ", error);
+    }
   };
 
   return (
@@ -53,13 +70,15 @@ const LoginForm = () => {
         <FormContainer onSubmit={handleSubmit}>
           <h2>Log in</h2>
           <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="username"
+            id="username"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Input
             type="password"
+            id="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
